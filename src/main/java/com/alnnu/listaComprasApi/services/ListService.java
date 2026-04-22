@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.alnnu.listaComprasApi.entities.ListEntity;
 import com.alnnu.listaComprasApi.entities.ProductEntity;
-import com.alnnu.listaComprasApi.entities.dto.addProductOnListDTO;
+import com.alnnu.listaComprasApi.entities.dto.AddProductOnListDTO;
 import com.alnnu.listaComprasApi.repositories.ListRepository;
 import com.alnnu.listaComprasApi.repositories.ProductRepository;
 import com.alnnu.listaComprasApi.utils.exceptions.ActiveListException;
@@ -43,7 +43,7 @@ public class ListService {
    * Add products to the active list;
    * Create a new list if there is no active list;
    */
-  public ListEntity addProducts(addProductOnListDTO dto) {
+  public ListEntity addProducts(AddProductOnListDTO dto) {
 
     ListEntity entity = repository.findByActiveTrue().orElse(createOne());
     ProductEntity product;
@@ -60,7 +60,7 @@ public class ListService {
   /*
    * Remove products from a list
    */
-  public ListEntity removePorducs(addProductOnListDTO dto) {
+  public ListEntity removePorducs(AddProductOnListDTO dto) {
     ListEntity entity = repository.findByActiveTrue()
         .orElseThrow(() -> new NotFoundException("No active List found"));
 

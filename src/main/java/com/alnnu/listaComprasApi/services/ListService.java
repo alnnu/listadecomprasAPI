@@ -5,6 +5,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.alnnu.listaComprasApi.entities.ListEntity;
@@ -103,5 +105,9 @@ public class ListService {
   /*
    * Get all list
    */
+  public Page<ListEntity> getAllList(Pageable pageable) {
+    Page<ListEntity> entities = repository.findAll(pageable);
 
+    return entities;
+  }
 }

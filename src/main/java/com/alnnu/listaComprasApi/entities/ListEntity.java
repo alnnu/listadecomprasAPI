@@ -10,7 +10,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -49,5 +48,13 @@ public class ListEntity {
 
   public void addProduct(ProductEntity product) {
     products.add(product);
+  }
+
+  public void removeProduct(Long productId) {
+    products.removeIf((product) -> product.getId() == productId);
+  }
+
+  public void desactivade() {
+    active = false;
   }
 }

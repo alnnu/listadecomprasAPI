@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,7 +23,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "List")
 @AllArgsConstructor
-@NoArgsConstructor
 public class ListEntity {
 
   @Id
@@ -40,4 +40,14 @@ public class ListEntity {
 
   @UpdateTimestamp
   private Instant updatedAt;
+
+  // create a new list
+  public ListEntity() {
+    this.active = true;
+    this.products = new ArrayList<ProductEntity>();
+  }
+
+  public void addProduct(ProductEntity product) {
+    products.add(product);
+  }
 }

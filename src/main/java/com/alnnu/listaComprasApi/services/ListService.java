@@ -1,8 +1,6 @@
 package com.alnnu.listaComprasApi.services;
 
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -11,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.alnnu.listaComprasApi.entities.ListEntity;
 import com.alnnu.listaComprasApi.entities.ProductEntity;
+import com.alnnu.listaComprasApi.entities.dto.addProductOnListDTO;
 import com.alnnu.listaComprasApi.repositories.ListRepository;
 import com.alnnu.listaComprasApi.repositories.ProductRepository;
 import com.alnnu.listaComprasApi.utils.exceptions.ActiveListException;
@@ -44,11 +43,11 @@ public class ListService {
    * Add products to the active list;
    * Create a new list if there is no active list;
    */
-  public ListEntity addProducts(List<Long> productIds) {
+  public ListEntity addProducts(addProductOnListDTO dto) {
 
     ListEntity entity = repository.findByActiveTrue().orElse(createOne());
     ProductEntity product;
-    for (Long id : productIds) {
+    for (Long id : dto.getIds()) {
       product = productRepository.findById(id)
           .orElseThrow(() -> new NotFoundException("Product with id {" + id + "} found"));
       entity.addProduct(product);
@@ -61,11 +60,11 @@ public class ListService {
   /*
    * Remove products from a list
    */
-  public ListEntity removePorducs(List<Long> productIds) {
+  public ListEntity removePorducs(addProductOnListDTO dto) {
     ListEntity entity = repository.findByActiveTrue()
         .orElseThrow(() -> new NotFoundException("No active List found"));
 
-    for (Long id : productIds) {
+    for (Long id : dto.getIds()) {
       entity.removeProduct(id);
     }
 

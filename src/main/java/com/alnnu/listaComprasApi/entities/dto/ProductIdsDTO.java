@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class AddProductOnListDTO {
+public class ProductIdsDTO {
 
   private List<Long> ids;
 }

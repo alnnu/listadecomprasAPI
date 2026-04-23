@@ -9,7 +9,7 @@ import com.alnnu.listaComprasApi.entities.ListEntity;
 
 @Repository
 public interface ListRepository extends JpaRepository<ListEntity, Long> {
-  boolean existsByActiveTrue();
+  Boolean existsByActiveTrue();
 
   Optional<ListEntity> findByActiveTrue();
 }

@@ -45,10 +45,8 @@ public class ListService {
    */
   public ListEntity addProducts(ProductIdsDTO dto) {
 
-    System.out.println("aaaaaaaaaaaaaaaaaaa----------------------------");
     ListEntity entity = repository.findByActiveTrue().orElse(new ListEntity());
 
-    System.out.println(dto);
     ProductEntity product;
     for (Long id : dto.getIds()) {
       product = productRepository.findById(id)
@@ -56,7 +54,6 @@ public class ListService {
       entity.addProduct(product);
     }
 
-    System.out.println("aaaaaaaaaaaaaaaaaaa----------------------------");
     repository.save(entity);
     return entity;
   }

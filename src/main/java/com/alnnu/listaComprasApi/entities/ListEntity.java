@@ -47,7 +47,9 @@ public class ListEntity {
   }
 
   public void addProduct(ProductEntity product) {
-    products.add(product);
+    if (!products.contains(product)) {
+      products.add(product);
+    }
   }
 
   public void removeProduct(Long productId) {

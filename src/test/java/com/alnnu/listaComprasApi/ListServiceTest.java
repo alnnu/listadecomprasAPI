@@ -3,10 +3,10 @@ package com.alnnu.listaComprasApi;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,7 @@ import com.alnnu.listaComprasApi.repositories.ListRepository;
 import com.alnnu.listaComprasApi.repositories.ProductRepository;
 import com.alnnu.listaComprasApi.services.ListService;
 import com.alnnu.listaComprasApi.utils.exceptions.ActiveListException;
+import com.alnnu.listaComprasApi.utils.exceptions.NotFoundException;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -44,11 +45,11 @@ public class ListServiceTest {
 
   @InjectMocks
   ListService service;
+
   /*
    * Test if the service is creating a list: For this create a list using the
    * service and assert if value returned is not null and verify the mock call
    */
-
   @Test
   @DisplayName("Create List Test Pass")
   void createListPass() {
@@ -104,5 +105,62 @@ public class ListServiceTest {
     assertEquals(list.getProducts().get(0), product);
     verify(repositoryMock, times(1)).findByActiveTrue();
     verify(productRepositoryMock, times(1)).findById(1l);
+  }
+
+  /*
+   * Test adding two products to an active list
+   */
+  @Test
+  @DisplayName("Add two product to an active list")
+  void addTwoProductAtiveList() {
+    List<Long> ids = new ArrayList<Long>();
+
+    ids.add(1l);
+    ids.add(2l);
+
+    ListEntity list = new ListEntity();
+
+    ProductEntity productOne = new ProductEntity(1l, "test1", "test", "test");
+    ProductEntity productTwo = new ProductEntity(2l, "test2", "test", "test");
+
+    ProductIdsDTO dto = new ProductIdsDTO(ids);
+
+    when(repositoryMock.findByActiveTrue()).thenReturn(Optional.of(list));
+
+    when(productRepositoryMock.findById(1l)).thenReturn(Optional.of(productOne));
+    when(productRepositoryMock.findById(2l)).thenReturn(Optional.of(productTwo));
+
+    list = service.addProducts(dto);
+
+    assertNotNull(list);
+
+    assertEquals(list.getProducts().get(0), productOne);
+    assertEquals(list.getProducts().get(1), productTwo);
+
+    verify(repositoryMock, times(1)).findByActiveTrue();
+    verify(productRepositoryMock, times(2)).findById(any());
+  }
+
+  /*
+   * Test adding one product that dont exists with a active list
+   */
+  @Test
+  @DisplayName("Add a product that dont exists")
+  void addProductNotExistActiveList() {
+    List<Long> ids = new ArrayList<Long>();
+
+    ids.add(1l);
+
+    ProductIdsDTO dto = new ProductIdsDTO(ids);
+
+    ListEntity list = new ListEntity();
+
+    when(repositoryMock.findByActiveTrue()).thenReturn(Optional.of(list));
+    when(productRepositoryMock.findById(1l)).thenReturn(Optional.empty());
+
+    assertThrows(NotFoundException.class, () -> service.addProducts(dto));
+    verify(repositoryMock, times(1)).findByActiveTrue();
+    verify(productRepositoryMock, times(1)).findById(1l);
+
   }
 }

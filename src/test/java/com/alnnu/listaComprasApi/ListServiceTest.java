@@ -163,4 +163,87 @@ public class ListServiceTest {
     verify(productRepositoryMock, times(1)).findById(1l);
 
   }
+
+  /*
+   * Test add duplicaded product
+   */
+  @Test
+  @DisplayName("Add duplicaded product")
+  void addDuplicatedProductActiveList() {
+    List<Long> ids = new ArrayList<Long>();
+
+    ids.add(1l);
+    ids.add(2l);
+    ids.add(2l);
+
+    ListEntity list = new ListEntity();
+
+    ProductIdsDTO dto = new ProductIdsDTO(ids);
+
+    ProductEntity productOne = new ProductEntity(1l, "test1", "test", "test");
+    ProductEntity productTwo = new ProductEntity(2l, "test2", "test", "test");
+
+    when(repositoryMock.findByActiveTrue()).thenReturn(Optional.of(list));
+
+    when(productRepositoryMock.findById(1l)).thenReturn(Optional.of(productOne));
+    when(productRepositoryMock.findById(2l)).thenReturn(Optional.of(productTwo));
+
+    list = service.addProducts(dto);
+
+    assertNotNull(list);
+
+    assertEquals(list.getProducts().get(0), productOne);
+    assertEquals(list.getProducts().get(1), productTwo);
+    assert (list.getProducts().size() == 2);
+
+    verify(repositoryMock, times(1)).findByActiveTrue();
+    verify(productRepositoryMock, times(3)).findById(any());
+
+  }
+
+  /*
+   * Test if send a array with no id
+   */
+  @Test
+  @DisplayName("Add product with no id")
+  void addProductsNoIdActiveList() {
+    List<Long> ids = new ArrayList<Long>();
+
+    ListEntity list = new ListEntity();
+
+    ProductIdsDTO dto = new ProductIdsDTO(ids);
+
+    list = service.addProducts(dto);
+
+    assertNotNull(list);
+
+    assertEquals(list.getProducts().size(), 0);
+  }
+
+  /*
+   * Test sending a null product
+   */
+  @Test
+  @DisplayName("Add a null product")
+  void addNullProductListActive() {
+    List<Long> ids = new ArrayList<Long>();
+
+    ids.add(null);
+
+    ProductIdsDTO dto = new ProductIdsDTO(ids);
+
+    assertThrows(NullPointerException.class, () -> service.addProducts(dto));
+
+  }
+
+  /*
+   * Test sending a null product list
+   */
+  @Test
+  @DisplayName("Add a null list product")
+  void addNullProductListListActive() {
+
+    assertThrows(NullPointerException.class, () -> service.addProducts(null));
+
+  }
 }

@@ -49,6 +49,11 @@ public class ListService {
 
     ProductEntity product;
     for (Long id : dto.getIds()) {
+
+      if (id.equals(null)) {
+        throw new NullPointerException("Id need to be a Long, but recive null");
+      }
+
       product = productRepository.findById(id)
           .orElseThrow(() -> new NotFoundException("Product with id {" + id + "} found"));
       entity.addProduct(product);

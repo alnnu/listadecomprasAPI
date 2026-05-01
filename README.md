@@ -4,7 +4,6 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.5-brightgreen?logo=springboot)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-latest-blue?logo=postgresql)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker)
-![License](https://img.shields.io/badge/license-MIT-green)
 
 API REST para gerenciamento de listas de compras. Permite criar e gerenciar listas com produtos pré-cadastrados, adicionando e removendo itens da lista ativa.
 
